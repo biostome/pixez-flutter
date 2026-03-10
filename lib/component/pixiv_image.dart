@@ -1,0 +1,269 @@
+/*
+ * Copyright (C) 2026. by Hans, All rights reserved
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_compatibility_layer/dio_compatibility_layer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
+
+import 'package:pixez/er/hoster.dart';
+import 'package:pixez/er/illust_cacher.dart';
+import 'package:pixez/main.dart';
+import 'package:rhttp/rhttp.dart' as r;
+
+const ImageHost = "i.pximg.net";
+const ImageCatHost = "i.pixiv.re";
+const ImageSHost = "s.pximg.net";
+
+// 注意，stable的http_interceptor这里是无效的，因为实现send是todo
+// 实现CacheManager和混入ImageCacheManager缺一不可
+// 如果你恰好看到这个实现方法实例，且对你有些帮助或者启发：
+// 听一首Mili-Salt, Pepper, Birds, And the Thought Police吧 🎵
+
+DioCacheManager? pixivCacheManager = DioCacheManager.instance;
+
+class Pivi18CacheHeaderData {
+  final String key;
+  final IllustQuality quality;
+
+  Pivi18CacheHeaderData({required this.key, required this.quality});
+}
+
+class PixivImage extends StatefulWidget {
+  final String url;
+  final Widget? placeWidget;
+  final bool fade;
+  final BoxFit? fit;
+  final bool? enableMemoryCache;
+  final double? height;
+  final double? width;
+  final String? host;
+  final Pivi18CacheHeaderData? cacheHeaderData;
+
+  PixivImage(
+    this.url, {
+    this.placeWidget,
+    this.fade = true,
+    this.fit,
+    this.enableMemoryCache,
+    this.height,
+    this.host,
+    this.width,
+    this.cacheHeaderData,
+  });
+
+  @override
+  _PixivImageState createState() => _PixivImageState();
+
+  static Future<void> generatePixivCache() async {
+    final dio = Dio();
+    final client = await r.RhttpCompatibleClient.createSync(
+      settings:
+          (userSetting.disableBypassSni ||
+              userSetting.pictureSource != ImageHost)
+          ? null
+          : r.ClientSettings(
+              tlsSettings: r.TlsSettings(verifyCertificates: false, sni: false),
+              dnsSettings: r.DnsSettings.dynamic(
+                resolver: (host) async {
+                  if (host == 'i.pximg.net') {
+                    return [Hoster.iPximgNet()];
+                  }
+                  if (host == 's.pximg.net') {
+                    return [Hoster.sPximgNet()];
+                  }
+                  return await InternetAddress.lookup(
+                    host,
+                  ).then((value) => value.map((e) => e.address).toList());
+                },
+              ),
+            ),
+    );
+    dio.httpClientAdapter = ConversionLayerAdapter(client);
+    DioCacheManager.initialize(dio);
+  }
+}
+
+class PixivImageInterceptor extends Interceptor {
+  static String cacheKey = 'cache_key';
+  static String cacheQualityKey = 'cache_quality';
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    super.onRequest(options, handler);
+    if (options.headers.containsKey(cacheKey)) {
+      final key = options.headers[cacheKey] as String?;
+      final quality = options.headers[cacheQualityKey] as String?;
+      options.headers.remove(cacheKey);
+      if (key != null && quality != null) {
+        options.extra[cacheKey] = key;
+        options.extra[cacheQualityKey] = quality;
+      }
+    }
+    handler.next(options);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    super.onResponse(response, handler);
+    final extra = response.extra;
+    if (extra.containsKey(cacheKey)) {
+      final key = extra[cacheKey] as String?;
+      final quality = int.tryParse(extra[cacheQualityKey] as String? ?? '');
+      if (key != null && quality != null) {
+        IllustCacher.saveCacheIllustQuality(
+          key,
+          IllustQualityExtension.fromValue(quality),
+          response.realUri.toString(),
+        );
+      }
+    }
+    handler.next(response);
+  }
+}
+
+class _PixivImageState extends State<PixivImage> {
+  late String url;
+  bool already = false;
+  bool? enableMemoryCache;
+  double? width;
+  double? height;
+  BoxFit? fit;
+  bool fade = true;
+  Widget? placeWidget;
+
+  @override
+  void initState() {
+    url = widget.url;
+    enableMemoryCache = widget.enableMemoryCache ?? true;
+    width = widget.width;
+    height = widget.height;
+    fit = widget.fit;
+    fade = widget.fade;
+    placeWidget = widget.placeWidget;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant PixivImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.url != widget.url) {
+      setState(() {
+        url = widget.url;
+        width = widget.width;
+        height = widget.height;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      placeholder: (context, url) =>
+          widget.placeWidget ?? _buildShimmerPlaceholder(),
+      errorWidget: (context, url, _) => _buildErrorWidget(),
+      fadeOutDuration: widget.fade ? const Duration(milliseconds: 1000) : null,
+      // memCacheWidth: width?.toInt(),
+      // memCacheHeight: height?.toInt(),
+      imageUrl: url,
+      cacheManager: pixivCacheManager,
+      height: height,
+      width: width,
+      fit: fit ?? BoxFit.fitWidth,
+      httpHeaders: {...Hoster.header(url: url)},
+    );
+  }
+
+  Widget _buildShimmerPlaceholder() {
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          stops: [0.0, 0.5, 1.0],
+          colors: [
+            Theme.of(context).colorScheme.surfaceContainerHighest,
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.surfaceContainerHighest,
+          ],
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.image_outlined,
+          size: 48,
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Container(
+      height: height,
+      width: width,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.broken_image_outlined,
+              size: 48,
+              color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+            ),
+            SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: Icon(Icons.refresh, size: 18),
+              label: Text('重试'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PixivProvider {
+  static ImageProvider url(String url, {String? preUrl}) {
+    return CachedNetworkImageProvider(
+      url,
+      headers: Hoster.header(url: preUrl),
+      cacheManager: pixivCacheManager,
+    );
+  }
+}
+
+// class RubyProvider extends ImageProvider{
+//   @override
+//   ImageStreamCompleter load(Object key, Future<Codec> Function(Uint8List bytes, {bool allowUpscaling, int cacheHeight, int cacheWidth}) decode) {
+//     // TODO: implement load
+//     throw UnimplementedError();
+//   }
+//
+//   @override
+//   Future<Object> obtainKey(ImageConfiguration configuration) {
+//     // TODO: implement obtainKey
+//     throw UnimplementedError();
+//   }
+// }
