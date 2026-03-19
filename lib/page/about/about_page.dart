@@ -139,7 +139,12 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: FlutterLogo(size: 80),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
                     ),
                   ),
                   SizedBox(height: 16),

@@ -278,17 +278,7 @@ class _PlatformPageState extends State<PlatformPage> {
                     OpenSettingPlugin.open();
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child:
-                        Image.asset("assets/images/open_by_default_hint.png"),
-                  ),
-                ),
-                Container(
-                  height: 20,
-                )
+
               ]
             ],
           );

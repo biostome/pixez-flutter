@@ -95,10 +95,13 @@ dev_dependencies:
   custom_lint: ^0.8.1
   riverpod_lint: ^3.1.0
   freezed: 3.2.3
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_icons:
+  android: true
+  image_path: "assets/images/logo.png"  # 你的图标路径
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is

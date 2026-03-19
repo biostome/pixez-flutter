@@ -115,6 +115,45 @@ class _AboutPageState extends State<AboutPage> {
     return Observer(builder: (context) {
       return ListView(
         children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Pivi18',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Version ${Constants.tagName}',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(),
           ListTile(
             leading: CircleAvatar(
               backgroundImage: AssetImage('assets/images/me.jpg'),
@@ -298,25 +337,7 @@ class _AboutPageState extends State<AboutPage> {
                 onPressed: () async {},
               ),
             ),
-            Card(
-              child: ListTile(
-                title: Text('Wechat Pay'),
-                subtitle: Text('tap'),
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (_) {
-                        return ContentDialog(
-                          content: Image.asset(
-                            'assets/images/weixin_qr.png',
-                            width: 300,
-                            height: 300,
-                          ),
-                        );
-                      });
-                },
-              ),
-            ),
+
           ],
           if (Platform.isIOS) ...[
             Card(

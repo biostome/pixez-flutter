@@ -23,6 +23,7 @@ import 'package:pixez/i18n.dart';
 import 'package:pixez/main.dart';
 import 'package:pixez/page/hello/ranking/rank_store.dart';
 import 'package:pixez/page/hello/ranking/ranking_mode/rank_mode_page.dart';
+import 'package:pixez/store/account_store.dart';
 
 class RankPage extends StatefulWidget {
   RankPage({Key? key});
@@ -172,18 +173,25 @@ class _RankPageState extends State<RankPage>
     return Container(
       child: Column(
         children: <Widget>[
-          AppBar(
-            elevation: 0.0,
-            title: Text(I18n.of(context).choice_you_like),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.save),
-                onPressed: () async {
-                  await rankStore.saveChange(boolList);
-                  rankStore.inChoice = false;
-                },
-              )
-            ],
+          Observer(
+            builder: (context) {
+              if (accountStore.now != null) {
+                return AppBar(
+                  elevation: 0.0,
+                  title: Text(I18n.of(context).choice_you_like),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.save),
+                      onPressed: () async {
+                        await rankStore.saveChange(boolList);
+                        rankStore.inChoice = false;
+                      },
+                    )
+                  ],
+                );
+              }
+              return SizedBox.shrink();
+            },
           ),
           Expanded(
             child: Padding(

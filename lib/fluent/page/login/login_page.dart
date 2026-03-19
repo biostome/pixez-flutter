@@ -130,14 +130,17 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(I18n.of(context).dont_have_account),
                           ),
                           SizedBox(height: 4),
-                          OutlinedButton(
-                            onPressed: () async {
-                              await showDialog(
-                                context: context,
-                                builder: (context) => TokenPage(),
-                              );
-                            },
-                            child: Text("Token"),
+                          Visibility(
+                            visible: false,
+                            child: OutlinedButton(
+                              onPressed: () async {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => TokenPage(),
+                                );
+                              },
+                              child: Text("Token"),
+                            ),
                           ),
                           SizedBox(height: 4),
                           HyperlinkButton(

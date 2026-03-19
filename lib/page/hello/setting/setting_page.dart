@@ -401,7 +401,7 @@ class _SettingPageState extends State<SettingPage> {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.login_rounded,
+                    Icons.person_add_rounded,
                     size: 28,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
@@ -648,46 +648,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         );
       else
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primaryContainer,
-                Theme.of(context).colorScheme.secondaryContainer,
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => Leader.push(context, LoginPage()),
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.login_rounded,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      I18n.of(context).login,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
+        return SizedBox.shrink();
     });
   }
 

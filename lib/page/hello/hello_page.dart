@@ -186,7 +186,7 @@ class _HelloPageState extends State<HelloPage> {
                 label: Text(I18n.of(context).search),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.more_horiz),
+                icon: Icon(Icons.person_outline),
                 label: Text(I18n.of(context).more),
               ),
             ],
@@ -259,8 +259,8 @@ class _HelloPageState extends State<HelloPage> {
               label: I18n.of(context).search,
             ),
             NavigationDestination(
-              icon: Icon(Icons.more_horiz_rounded),
-              selectedIcon: Icon(Icons.more_horiz),
+              icon: Icon(Icons.person_outline_rounded),
+              selectedIcon: Icon(Icons.person_rounded),
               label: I18n.of(context).more,
             ),
           ],
