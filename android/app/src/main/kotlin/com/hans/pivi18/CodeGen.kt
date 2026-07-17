@@ -1,4 +1,4 @@
-package com.perol.pixez
+package com.hans.pivi18
 
 import android.util.Base64
 import java.security.MessageDigest

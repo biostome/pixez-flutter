@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -186,7 +186,7 @@ class _MyAppState extends State<MyApp> {
                   );
                 },
               ),
-              title: 'PixEz',
+              title: 'Pivi18',
               builder: (context, child) {
                 child = botToastBuilder(context, child);
                 I18n.context = context;

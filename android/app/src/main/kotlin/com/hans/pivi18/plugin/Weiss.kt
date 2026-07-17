@@ -1,4 +1,4 @@
-package com.perol.pixez.plugin
+package com.hans.pivi18.plugin
 
 //import androidx.webkit.ProxyConfig
 //import androidx.webkit.ProxyController

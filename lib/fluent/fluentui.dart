@@ -132,7 +132,7 @@ Widget buildFluentUI(BuildContext context) {
             child: SplashPage(),
           );
         }),
-        title: 'PixEz',
+        title: 'Pivi18',
         builder: (context, child) {
           child = botToastBuilder(context, child);
           return Directionality(

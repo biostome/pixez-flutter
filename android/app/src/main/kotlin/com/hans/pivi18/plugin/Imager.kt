@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
  *
  */
 
-package com.perol.pixez.plugin
+package com.hans.pivi18.plugin
 
 import android.content.ContentValues
 import android.content.Context

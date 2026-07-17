@@ -1,4 +1,4 @@
-//package com.perol.pixez.glance
+//package com.hans.pivi18.glance
 //
 //import android.appwidget.AppWidgetManager
 //import android.content.Context
@@ -22,7 +22,7 @@
 //import androidx.glance.text.Text
 //import androidx.glance.text.TextAlign
 //import androidx.glance.text.TextStyle
-//import com.perol.pixez.R
+//import com.hans.pivi18.R
 //import kotlinx.coroutines.GlobalScope
 //import kotlinx.coroutines.launch
 //

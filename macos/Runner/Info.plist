@@ -24,7 +24,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.perol.pixezFlutter</string>
+			<string>com.hans.pivi18Flutter</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>pixiv</string>

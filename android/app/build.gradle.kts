@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -59,11 +59,11 @@ val isGooglePlay = dartEnvironmentVariables["IS_GOOGLEPLAY"] as Boolean
 val packageName = if (isGooglePlay) {
     "com.perol.play.pixez"
 } else {
-    "com.perol.pixez"
+    "com.hans.pivi18"
 }
 
 android {
-    namespace = "com.perol.pixez"
+    namespace = "com.hans.pivi18"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 

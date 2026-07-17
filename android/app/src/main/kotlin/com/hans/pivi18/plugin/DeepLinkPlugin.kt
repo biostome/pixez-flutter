@@ -1,4 +1,4 @@
-package com.perol.pixez.plugin
+package com.hans.pivi18.plugin
 
 import android.content.BroadcastReceiver
 import android.content.Context

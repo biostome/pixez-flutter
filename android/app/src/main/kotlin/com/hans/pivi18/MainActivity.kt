@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
  *
  */
 
-package com.perol.pixez
+package com.hans.pivi18
 
 import android.Manifest
 import android.app.Activity
@@ -37,16 +37,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.lifecycleScope
-import com.perol.pixez.plugin.CustomTab
-import com.perol.pixez.plugin.DeepLinkPlugin
-import com.perol.pixez.plugin.JsEvalPlugin
-import com.perol.pixez.plugin.OpenSettinger
-import com.perol.pixez.plugin.Safer
-import com.perol.pixez.plugin.SecurePlugin
-import com.perol.pixez.plugin.SupporterPlugin
-import com.perol.pixez.plugin.Weiss
-import com.perol.pixez.plugin.exist
-import com.perol.pixez.plugin.save
+import com.hans.pivi18.plugin.CustomTab
+import com.hans.pivi18.plugin.DeepLinkPlugin
+import com.hans.pivi18.plugin.JsEvalPlugin
+import com.hans.pivi18.plugin.OpenSettinger
+import com.hans.pivi18.plugin.Safer
+import com.hans.pivi18.plugin.SecurePlugin
+import com.hans.pivi18.plugin.SupporterPlugin
+import com.hans.pivi18.plugin.Weiss
+import com.hans.pivi18.plugin.exist
+import com.hans.pivi18.plugin.save
 import com.waynejo.androidndkgif.GifEncoder
 import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
@@ -441,7 +441,7 @@ class MainActivity : FlutterActivity() {
 
     private fun getPath(): String? {
         if (saveMode == 0) {
-            return "Pictures/PixEz"
+            return "Pictures/Pivi18"
         }
         if (saveMode == 2) {
             helplessPath = sharedPreferences.getString("flutter.store_path", "")

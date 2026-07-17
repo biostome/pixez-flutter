@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
  *
  */
 
-package com.perol.pixez
+package com.hans.pivi18
 
 import android.app.Application
 import coil3.ImageLoader
@@ -22,7 +22,7 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import coil3.request.crossfade
 
-class PixEz : Application(), SingletonImageLoader.Factory {
+class Pivi18 : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         CrashHandler.instance.init(applicationContext)

@@ -1,4 +1,4 @@
-package com.perol.pixez.glance
+package com.hans.pivi18.glance
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

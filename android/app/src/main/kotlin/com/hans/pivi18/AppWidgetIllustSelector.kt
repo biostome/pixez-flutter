@@ -1,8 +1,8 @@
-package com.perol.pixez
+package com.hans.pivi18
 
 import android.content.Context
-import com.perol.pixez.glance.GlanceDBManager
-import com.perol.pixez.glance.GlanceIllust
+import com.hans.pivi18.glance.GlanceDBManager
+import com.hans.pivi18.glance.GlanceIllust
 
 private const val SHARED_PREFERENCES_NAME = "FlutterSharedPreferences"
 private const val WIDGET_ILLUST_TYPE_KEY = "flutter.widget_illust_type"

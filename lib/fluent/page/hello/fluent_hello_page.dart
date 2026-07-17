@@ -60,7 +60,7 @@ class _FluentHelloPageState extends State<FluentHelloPage> {
         bool isTop = userSetting.isTopMode;
         return NavigationFramework(
           initIndex: initIndex,
-          defaultTitle: const Text('PixEz'),
+          defaultTitle: const Text('Pivi18'),
           displayMode: isTop ? PaneDisplayMode.top : PaneDisplayMode.auto,
           header: isTop ? null : _buildHeader(isLogin),
           autoSuggestBox: PixEzSearchBox(),
@@ -244,7 +244,7 @@ class _FluentHelloPageState extends State<FluentHelloPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'PixEz',
+                            'Pivi18',
                             style: FluentTheme.of(context).typography.title,
                           ),
                           Text(

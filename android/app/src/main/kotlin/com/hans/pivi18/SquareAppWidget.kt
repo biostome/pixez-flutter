@@ -1,22 +1,37 @@
-package com.perol.pixez
+/*
+ * Copyright (C) 2020. by Hans, All rights reserved
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
-import android.annotation.SuppressLint
+package com.hans.pivi18
+
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.widget.RemoteViewsCompat.setImageViewColorFilter
+import androidx.core.content.FileProvider
+import coil3.DrawableImage
 import coil3.Image
+import coil3.asDrawable
 import coil3.imageLoader
 import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
@@ -24,15 +39,18 @@ import coil3.request.ImageRequest
 import coil3.request.transformations
 import coil3.toBitmap
 import coil3.transform.RoundedCornersTransformation
-import com.google.android.material.color.MaterialColors
-import com.perol.pixez.glance.GlanceDBManager
-import com.perol.pixez.glance.GlanceIllust
+import com.hans.pivi18.glance.GlanceDBManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
-class IllustCardAppWidget : AppWidgetProvider() {
+/**
+ * Implementation of App Widget functionality.
+ */
+class SquareAppWidget : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context,
@@ -50,9 +68,9 @@ class IllustCardAppWidget : AppWidgetProvider() {
                     val host = sharedPreferences.getString("flutter.picture_source", null)
                     updateWidget(
                         context,
-                        appWidgetManager,
+                        it.pictureUrl,
                         appWidgetId,
-                        illust,
+                        it.illustId,
                         host
                     )
                 }
@@ -75,14 +93,13 @@ class IllustCardAppWidget : AppWidgetProvider() {
 
 private fun updateWidget(
     context: Context,
-    appWidgetManager: AppWidgetManager,
+    url: String,
     appWidgetId: Int,
-    illust: GlanceIllust,
+    iId: Long?,
     host: String?
 ) {
-    val url = illust.pictureUrl
-    val iId = illust.illustId
-    val views = RemoteViews(context.packageName, R.layout.illust_app_widget)
+    val views = RemoteViews(context.packageName, R.layout.card_app_widget)
+    val manager = AppWidgetManager.getInstance(context)
     try {
         val trueUrl = if (host != null) {
             url.replace("i.pximg.net", host)
@@ -102,14 +119,13 @@ private fun updateWidget(
                     .set("host", Uri.parse(trueUrl).host!!)
                     .build()
             )
-            .size(540, 540)
             .listener(onError = { i, j ->
-                Log.e("Card app widget", "url error: ${trueUrl}", j.throwable)
+                io.flutter.Log.e("Card app widget", "url error: ${trueUrl}", j.throwable)
             })
+            .size(540, 540)
             .target(object : coil3.target.Target {
-                @SuppressLint("UnspecifiedImmutableFlag")
                 override fun onSuccess(result: Image) {
-                    Log.d("Card app widget", "url success: ${trueUrl}")
+                    super.onSuccess(result)
                     MainScope().launch {
                         val bitmap = withContext(Dispatchers.IO) {
                             runCatching {
@@ -118,58 +134,49 @@ private fun updateWidget(
                             }.getOrNull()
                         }
                         if (bitmap != null) {
-                            views.setImageViewBitmap(
-                                R.id.appwidget_image,
-                                bitmap
-                            )
-                            val intent = Intent(context, MainActivity::class.java).apply {
-                                putExtra("iid", iId)
-                            }
-                            val pendingIntent =
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    PendingIntent.getActivity(
-                                        context,
-                                        url.hashCode() + views.hashCode(),
-                                        intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                                    )
-                                } else {
-                                    PendingIntent.getActivity(
-                                        context,
-                                        url.hashCode() + views.hashCode(),
-                                        intent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT
-                                    )
-                                }
-                            views.setTextViewText(R.id.appwidget_title, illust.title)
-                            views.setTextViewText(R.id.appwidget_subtitle, illust.userName)
-                            views.setOnClickPendingIntent(
-                                R.id.appwidget_normal_container,
-                                pendingIntent
-                            )
-                            views.setViewVisibility(R.id.appwidget_warning_container, View.GONE)
-                            views.setImageViewResource(
-                                R.id.appwidget_app_icon,
-                                R.mipmap.ic_launcher_foreground
-                            )
-                            views.setImageViewColorFilter(
-                                R.id.appwidget_app_icon,
-                                MaterialColors.getColor(
-                                    context,
-                                    android.R.attr.colorAccent,
-                                    Color.BLACK
+                            try {
+                                views.setImageViewBitmap(
+                                    R.id.appwidget_image,
+                                    bitmap
                                 )
-                            )
-                            appWidgetManager.updateAppWidget(appWidgetId, views)
+                                val intent = Intent(context, MainActivity::class.java).apply {
+                                    putExtra("iid", iId)
+                                }
+                                val pendingIntent =
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        PendingIntent.getActivity(
+                                            context,
+                                            url.hashCode(),
+                                            intent,
+                                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                                        )
+                                    } else {
+                                        PendingIntent.getActivity(
+                                            context,
+                                            url.hashCode(),
+                                            intent,
+                                            PendingIntent.FLAG_UPDATE_CURRENT
+                                        )
+                                    }
+                                views.setOnClickPendingIntent(R.id.appwidget_image, pendingIntent)
+                                views.setViewVisibility(
+                                    R.id.appwidget_warning_container,
+                                    View.GONE
+                                )
+                                manager.updateAppWidget(appWidgetId, views)
+                                io.flutter.Log.d("Card app widget", "url success: ${trueUrl}")
+                            } catch (throwable: Throwable) {
+                                io.flutter.Log.d("Card app widget", throwable.toString())
+                            }
                         }
                     }
-                }
 
-            })
-            .build()
+                }
+            }).build()
+
         context.imageLoader.enqueue(request)
     } catch (throwable: Throwable) {
-        Log.d("Card app widget", throwable.toString())
+        io.flutter.Log.d("Card app widget", throwable.toString())
     }
 
 }

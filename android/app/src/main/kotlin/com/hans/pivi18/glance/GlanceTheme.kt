@@ -1,11 +1,11 @@
-//package com.perol.pixez.glance
+//package com.hans.pivi18.glance
 //
 //import androidx.compose.runtime.Composable
 //import androidx.compose.runtime.CompositionLocalProvider
 //import androidx.compose.runtime.ReadOnlyComposable
 //import androidx.compose.runtime.staticCompositionLocalOf
 //import androidx.glance.unit.ColorProvider
-//import com.perol.pixez.R
+//import com.hans.pivi18.R
 //
 //object GlanceTheme {
 //    val colors: ColorProviders

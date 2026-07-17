@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.perol.pixez">
+    package="com.hans.pivi18">
     <!--
      io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -26,10 +26,10 @@
     </queries>
 
     <application
-        android:name=".PixEz"
+        android:name=".Pivi18"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="PixEz"
+        android:label="Pivi18"
         android:extractNativeLibs="true"
         android:requestLegacyExternalStorage="true">
         <receiver

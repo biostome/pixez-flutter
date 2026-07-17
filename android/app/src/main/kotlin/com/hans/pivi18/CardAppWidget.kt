@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020. by perol_notsf, All rights reserved
+ * Copyright (C) 2020. by Hans, All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,7 +15,7 @@
  */
 
 //Use glance
-//package com.perol.pixez
+//package com.hans.pivi18
 //
 //import android.app.PendingIntent
 //import android.appwidget.AppWidgetManager

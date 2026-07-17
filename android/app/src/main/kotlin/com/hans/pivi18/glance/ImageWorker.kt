@@ -1,4 +1,4 @@
-//package com.perol.pixez.glance
+//package com.hans.pivi18.glance
 //
 //import android.app.NotificationChannel
 //import android.app.NotificationManager
@@ -16,7 +16,7 @@
 //import coil.memory.MemoryCache
 //import coil.request.ErrorResult
 //import coil.request.ImageRequest
-//import com.perol.pixez.R
+//import com.hans.pivi18.R
 //
 //class ImageWorker(
 //    private val context: Context,
